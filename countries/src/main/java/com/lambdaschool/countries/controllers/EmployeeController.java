@@ -92,4 +92,28 @@ public class EmployeeController
         return new ResponseEntity<>(maxPop, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/population/median", produces = "application/json")
+    public ResponseEntity<?> medianPop()
+    {
+        List<Country> myList = new ArrayList<>();
+        countryrepos.findAll().iterator().forEachRemaining(myList::add);
+
+        myList.sort((c1, c2) -> (int)(c1.getPopulation() - c2.getPopulation()));
+
+        double listSize = myList.size();
+        long medPopId = (long)(listSize / 2);
+        //if you want 101 then you would do (long)(Math.ceil(listSize / 2));
+
+        Country medPopObj = new Country(" ", 0, 0, 0);
+
+        for (Country c : myList)
+        {
+            if (c.getCountryid() == medPopId)
+            {
+                medPopObj = c;
+            }
+        }
+
+        return new ResponseEntity<>(medPopObj, HttpStatus.OK);
+    }
 }
